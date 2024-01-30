@@ -9,7 +9,9 @@ edition.workspace = true
 
 [dependencies]
 bytes = "1.5.0"
+dashmap = "5.5.3"
 tokio = { version = "1", features = ["full", "io-util"] }
+phf = { version = "0.11", features = ["macros"] }
 
 # [build]
 # rustflags = ["--cfg", "tokio_unstable"]

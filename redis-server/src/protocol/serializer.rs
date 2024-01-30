@@ -12,8 +12,9 @@ impl DataType {
                     .collect::<Vec<String>>();
                 let output_result = output.join("");
                 format!("*{}\r\n{}", output.len(), output_result)
-            }
-            DataType::Nil => "Nil".to_string(),
+            },
+            DataType::Error(str)  => format!("-{}\r\n", str),
+            DataType::Nil => "$-1\r\n".to_string(),
         }
     }
 }
