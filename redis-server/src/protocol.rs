@@ -21,7 +21,7 @@ pub async fn handle_connection(server: Arc<Server>, stream: &mut TcpStream) -> R
             break;
         }
 
-        println!("Parsing Line: {line}");
+        // println!("Parsing Line: {line}");
         let parse_res = parser.next(&line).map_err(|err| err.to_string())?;
         if let ParseResult::Complete = parse_res {
             break;

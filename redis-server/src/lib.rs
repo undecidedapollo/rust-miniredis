@@ -3,3 +3,4 @@ pub mod parser;
 pub mod datatypes;
 pub mod commands;
 pub mod server;
+pub mod data;

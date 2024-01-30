@@ -29,7 +29,7 @@ impl CommandParser for BaseCommandParser {
     ) -> Result<(ParseResult, Option<Box<dyn CommandParser + Send>>), String> {
         if str.starts_with("*") {
             let count = &str[1..];
-            println!("Parsing an array w/ count: {count}");
+            // println!("Parsing an array w/ count: {count}");
             let count_usize = count.parse::<usize>().map_err(|err| err.to_string())?;
             return Ok((
                 ParseResult::IsMore,
@@ -38,7 +38,7 @@ impl CommandParser for BaseCommandParser {
         }
         if str.starts_with("$") {
             let count = &str[1..];
-            println!("Parsing a string w/ count: {count}");
+            // println!("Parsing a string w/ count: {count}");
             let count_usize = count.parse::<usize>().map_err(|err| err.to_string())?;
             return Ok((
                 ParseResult::IsMore,
@@ -118,7 +118,7 @@ impl CommandParser for ArrayCommandParser {
         &mut self,
         str: &str,
     ) -> Result<(ParseResult, Option<Box<dyn CommandParser + Send>>), String> {
-        println!("Array parser {} {}", self.size, self.current_iter);
+        // println!("Array parser {} {}", self.size, self.current_iter);
         if self.current_iter == self.state.len() {
             self.state.push(Parser::new());
         }
