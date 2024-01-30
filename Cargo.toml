@@ -1,9 +1,9 @@
 [workspace]
 resolver = "2"
-members = ["just-for-fun", "pylot-utils"]
+members = [ "redis-client","redis-server"]
 
 [workspace.package]
-version = "1.2.3"
-authors = ["UndecidedApollo"]
+version = "0.0.1"
+authors = ["undecidedapollo"]
 description = ""
 edition = "2021"
