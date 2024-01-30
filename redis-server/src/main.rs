@@ -3,7 +3,7 @@ use std::sync::Arc;
 use redis_server::server::Server;
 use tokio::io::AsyncWriteExt;
 use tokio::net::TcpListener;
-use redis_server::protocol::handle_connection;
+use redis_server::protocol::stream_parser::handle_connection;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
