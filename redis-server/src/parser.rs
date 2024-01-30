@@ -1,7 +1,4 @@
-use std::collections::HashMap;
-
 use phf::phf_map;
-
 use crate::commands::Command;
 use crate::datatypes::DataType;
 

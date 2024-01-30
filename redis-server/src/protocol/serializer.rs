@@ -10,8 +10,7 @@ impl DataType {
                     .iter()
                     .map(|x| x.to_wire_protocol())
                     .collect::<Vec<String>>();
-                let output_result = output.join("");
-                format!("*{}\r\n{}", output.len(), output_result)
+                format!("*{}\r\n{}", output.len(), output.join(""))
             },
             DataType::Error(str)  => format!("-{}\r\n", str),
             DataType::Nil => "$-1\r\n".to_string(),
