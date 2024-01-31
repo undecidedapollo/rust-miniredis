@@ -14,6 +14,7 @@ static COMMAND_PARSER: phf::Map<
     "set" => parse_set,
     "get" => parse_get,
     "dump" => parse_dump,
+    "config" => parse_config,
 };
 
 fn current_unix_timestamp_millis() -> Duration {
@@ -92,6 +93,20 @@ fn parse_get(_: &CommandParsingContext, x: &[DataType]) -> Result<Command, Strin
         [DataType::BulkString(key)] => Ok(Command::Get {
             key: key.to_string(),
         }),
+        _ => Err("Invalid structure".into()),
+    }
+}
+
+fn parse_config(_: &CommandParsingContext, x: &[DataType]) -> Result<Command, String> {
+    let (sub_command, rest) = x.split_first().ok_or("Unknown second command for CONFIG".to_string())?;
+
+    let DataType::BulkString(sub_command_string) = sub_command else {
+        return Err("Expected second command to be a string".to_string());
+    };
+    match (sub_command_string.to_lowercase().as_ref(), rest) {
+        ("get", [DataType::BulkString(get_key)]) => {
+            Ok(Command::ConfigGet { key: Some(get_key.to_string()) })
+        },
         _ => Err("Invalid structure".into()),
     }
 }

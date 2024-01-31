@@ -6,6 +6,9 @@ description.workspace = true
 edition.workspace = true
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[profile.release]
+codegen-units = 1
+lto = "fat"
 
 [dependencies]
 bytes = "1.5.0"

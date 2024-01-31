@@ -20,5 +20,8 @@ pub enum Command {
     Get {
         key: String,
     },
+    ConfigGet {
+        key: Option<String>,
+    },
     Dump,
 }

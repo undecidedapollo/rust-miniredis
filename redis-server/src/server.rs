@@ -16,6 +16,9 @@ impl Server {
         match command {
             Command::Set(command) => self.engine.process_set(command),
             Command::Get { key } => self.engine.process_get(key),
+            Command::ConfigGet { .. } => {
+                Ok(DataType::Array(vec![DataType::BulkString("save".into()), DataType::BulkString("3600 1 300 100 60 10000".into())]))
+            },
             Command::Dump => self.engine.process_dump(),
         }
     }

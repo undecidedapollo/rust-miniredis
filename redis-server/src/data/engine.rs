@@ -1,30 +1,52 @@
 use crate::{commands::{SetCommand, SetExistingOptions}, datatypes::DataType};
-use std::{collections::HashMap, sync::Mutex};
+use std::{cell::RefCell, collections::{hash_map::DefaultHasher, HashMap}, hash::{Hash, Hasher}, sync::Mutex};
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 enum StorageValue {
     String(String),
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 struct StorageRecord {
     value: StorageValue,
     ttl: Option<u128>,
 }
 
 pub struct InMemoryEngine {
-    keymap: Mutex<HashMap<String, StorageRecord>>,
+    keymap: [Mutex<HashMap<String, StorageRecord>>;8],
+}
+
+thread_local! {
+    static HASHER: RefCell<DefaultHasher> = RefCell::from(DefaultHasher::new());
 }
 
 impl InMemoryEngine {
     pub fn new() -> InMemoryEngine {
         InMemoryEngine {
-            keymap: Mutex::from(HashMap::new()),
+            keymap: [
+                Mutex::from(HashMap::new()),
+                Mutex::from(HashMap::new()),
+                Mutex::from(HashMap::new()),
+                Mutex::from(HashMap::new()),
+                Mutex::from(HashMap::new()),
+                Mutex::from(HashMap::new()),
+                Mutex::from(HashMap::new()),
+                Mutex::from(HashMap::new()),
+            ],
         }
     }
 
+    fn get_map_for_key(&self, str: &str) -> &Mutex<HashMap<String, StorageRecord>> {
+        HASHER.with_borrow_mut(|mut f| {
+            str.hash(&mut f);
+            let output = f.finish();
+            let index = (output % 8) as usize;
+            &self.keymap[index]
+        })
+    }
+
     pub fn process_set(&self, cmd: SetCommand) -> Result<DataType, String> {
-        let mut map = self.keymap.lock().map_err(|err| err.to_string())?;
+        let mut map = self.get_map_for_key(&cmd.key).lock().map_err(|err| err.to_string())?;
         let previous_obj: Option<&StorageRecord> = map.get(&cmd.key);
         let previous_value = match (cmd.get_previous_value, previous_obj) {
             (true, Some(stored_value)) => {
@@ -69,7 +91,7 @@ impl InMemoryEngine {
     }
 
     pub fn process_get(&self, key: String) -> Result<DataType, String> {
-        let map = self.keymap.lock().map_err(|err| err.to_string())?;
+        let map = self.get_map_for_key(&key).lock().map_err(|err| err.to_string())?;
         let val = map.get(&key);
         match val {
             Some(StorageRecord{
@@ -80,10 +102,14 @@ impl InMemoryEngine {
         }
     }
 
-    pub fn process_dump(&self) -> Result<DataType, String> {
-        let map = self.keymap.lock().map_err(|err| err.to_string())?;
+    pub fn process_dump(&self) -> Result<DataType, String> {        
+        let mut overall_map = HashMap::<String, StorageRecord>::new();
+        self.keymap.iter().for_each(|x| {
+            let map = x.lock().unwrap();
+            overall_map.extend(map.iter().map(|(k, v)| (k.to_string(), v.clone())));
+        });
 
-        println!("{:#?}", map);
+        println!("{:#?}", overall_map);
 
         Ok(DataType::Nil)
     }
