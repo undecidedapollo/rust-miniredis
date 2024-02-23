@@ -6,7 +6,7 @@ use tokio::net::TcpStream;
 use tokio::time::sleep;
 use crate::datatypes::DataType;
 use crate::protocol::string_parser::{ParseResult, Parser};
-use crate::server::Server;
+use crate::multi_server::Server;
 
 pub async fn handle_connection(server: Arc<Server>, stream: &mut TcpStream) -> Result<(), String> {
     let (read_stream, mut write_stream) = stream.split();

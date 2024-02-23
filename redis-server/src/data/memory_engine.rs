@@ -1,18 +1,7 @@
-use crate::{commands::{SetCommand, SetExistingOptions}, datatypes::DataType};
+use crate::{commands::{SetCommand, SetExistingOptions}, datatypes::{DataType,StorageRecord, StorageValue}};
 use std::{cell::RefCell, collections::{hash_map::DefaultHasher, HashMap}, hash::{Hash, Hasher}, sync::Mutex};
 
 use super::{shared::hashy, typesd::StorageEngine};
-
-#[derive(Debug, Clone)]
-enum StorageValue {
-    String(String),
-}
-
-#[derive(Debug, Clone)]
-struct StorageRecord {
-    value: StorageValue,
-    ttl: Option<u128>,
-}
 
 pub struct InMemoryEngine {
     keymap: [Mutex<HashMap<String, StorageRecord>>;8],

@@ -1,9 +1,9 @@
 use std::error::Error;
 use std::sync::Arc;
-use redis_server::server::Server;
+use redis_server::multi_server::Server;
 use tokio::io::AsyncWriteExt;
 use tokio::net::TcpListener;
-use redis_server::protocol::stream_parser::handle_connection;
+use redis_server::protocol::stream_parser_tokio::handle_connection;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {

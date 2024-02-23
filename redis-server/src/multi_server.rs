@@ -6,15 +6,15 @@ use crate::{commands::Command, datatypes::DataType};
 
 pub struct Server {
     // engine: Box<dyn StorageEngine>, Why doesn't this work? https://doc.rust-lang.org/reference/items/traits.html#object-safety
-    // engine: InMemoryEngine,
-    engine: ThreadEngineManager,
+    engine: InMemoryEngine,
+    // engine: ThreadEngineManager,
 }
 
 impl Server {
     pub fn new() -> Server {
         Server {
-            // engine: InMemoryEngine::new(),
-            engine: ThreadEngineManager::new(),
+            engine: InMemoryEngine::new(),
+            // engine: ThreadEngineManager::new(),
         }
     }
 
