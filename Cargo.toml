@@ -7,3 +7,11 @@ version = "0.0.1"
 authors = ["undecidedapollo"]
 description = ""
 edition = "2021"
+
+[profile.release]
+codegen-units = 1
+lto = "fat"
+
+[profile.flame]
+inherits = "release"
+debug = true

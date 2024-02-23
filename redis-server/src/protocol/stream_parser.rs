@@ -43,7 +43,7 @@ pub async fn handle_connection(server: Arc<Server>, stream: &mut TcpStream) -> R
     
         let response = match command {
             Ok(command) => {
-                let result = server.process_command(command)?;
+                let result = server.process_command(command).await?;
                 result
             },
             Err(err) => {
